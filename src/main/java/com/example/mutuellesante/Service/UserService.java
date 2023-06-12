@@ -1,5 +1,7 @@
-package com.example.mutuellesante.User;
+package com.example.mutuellesante.Service;
 
+import com.example.mutuellesante.Repository.UserRepository;
+import com.example.mutuellesante.Entity.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

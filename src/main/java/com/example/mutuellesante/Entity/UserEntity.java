@@ -1,4 +1,4 @@
-package com.example.mutuellesante.User;
+package com.example.mutuellesante.Entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
