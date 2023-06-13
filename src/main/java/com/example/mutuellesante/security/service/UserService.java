@@ -51,7 +51,7 @@ public class UserService implements UserServiceImpl, UserDetailsService {
         utilisateur.setRole(user.getRole());
         return userRepository.save(utilisateur);
     }
-    /*
+
     public UserEntity addUser(UserEntity user){
         return userRepository.save(user);
     }
@@ -80,7 +80,7 @@ public class UserService implements UserServiceImpl, UserDetailsService {
             throw new IllegalArgumentException("User with ID " + userId + " does not exist.");
         }
     }
-    */
+
 
     @Override
     public Role saveRole(Role role) {
