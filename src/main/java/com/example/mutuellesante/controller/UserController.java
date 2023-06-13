@@ -1,5 +1,7 @@
-package com.example.mutuellesante.User;
+package com.example.mutuellesante.controller;
 
+import com.example.mutuellesante.security.entity.UserEntity;
+import com.example.mutuellesante.security.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

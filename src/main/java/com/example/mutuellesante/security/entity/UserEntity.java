@@ -1,4 +1,4 @@
-package com.example.mutuellesante.User;
+package com.example.mutuellesante.security.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -15,11 +15,14 @@ public class UserEntity {
     @Id
     @GeneratedValue
     @Column(unique = true, nullable = false, updatable = false)
-    private Integer user_id;
+    protected Integer user_id;
     @Column(unique = true, nullable = false)
-    private String email;
+    protected String email;
     @Column(unique = true, nullable = false)
-    private String username;
+    protected String username;
     @Column(nullable = false)
-    private String password;
+    protected String password;
+    @Column(nullable = false)
+    protected Role role;
+
 }
