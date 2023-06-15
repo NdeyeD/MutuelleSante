@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "user")
+@Table(name = "user_entity")
 @Inheritance(strategy = InheritanceType.JOINED)
 public class UserEntity {
     @Id
@@ -21,8 +21,15 @@ public class UserEntity {
     @Column(unique = true, nullable = false)
     protected String username;
     @Column(nullable = false)
-    protected String password;
+    protected String nom;
     @Column(nullable = false)
+    protected String prenom;
+    @Column(nullable = false)
+    protected String password;
+
+    //One To One avec Role
+    @ManyToOne
+    @JoinColumn(name = "role_id")
     protected Role role;
 
 }

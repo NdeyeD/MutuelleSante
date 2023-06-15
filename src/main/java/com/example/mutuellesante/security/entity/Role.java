@@ -1,6 +1,7 @@
 package com.example.mutuellesante.security.entity;
 
 
+import com.example.mutuellesante.entity.Rolename;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -19,8 +20,10 @@ public class Role {
     protected Integer id;
 
     @Column(nullable = false, unique = true)
-    protected String roleName;
+    protected Rolename roleName;
 
-    @ManyToMany(mappedBy = "roles")
+
+    //One to Many avec UserEntity
+    @OneToMany (mappedBy = "role")
     private List<UserEntity> users;
 }

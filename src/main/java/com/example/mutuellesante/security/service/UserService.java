@@ -1,22 +1,23 @@
 package com.example.mutuellesante.security.service;
 
+import com.example.mutuellesante.entity.Rolename;
 import com.example.mutuellesante.security.entity.Role;
 import com.example.mutuellesante.security.entity.UserEntity;
 import com.example.mutuellesante.security.repository.RoleRepository;
 import com.example.mutuellesante.security.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,10 +29,14 @@ public class UserService implements UserServiceImpl, UserDetailsService {
     @Autowired
     PasswordEncoder passwordEncoder;
 
+
+
     public UserService(RoleRepository appRoleRepositories, UserRepository appUserRepositories, PasswordEncoder passwordEncoder) {
+
         this.roleRepository = appRoleRepositories;
         this.userRepository = appUserRepositories;
         this.passwordEncoder = passwordEncoder;
+
     }
     @Override
     public UserEntity getUserByEmail(String username) {
@@ -44,12 +49,8 @@ public class UserService implements UserServiceImpl, UserDetailsService {
     public UserEntity saveUser(UserEntity user) {
         UserEntity utilisateur = userRepository.findByEmail(user.getEmail());
         if(utilisateur !=null) throw  new RuntimeException("Cet utilisateur existe deja ");
-        utilisateur = new UserEntity();
-        utilisateur.setUsername(user.getUsername());
-        utilisateur.setPassword(passwordEncoder.encode(user.getPassword()));
-        utilisateur.setEmail(user.getEmail());
-        utilisateur.setRole(user.getRole());
-        return userRepository.save(utilisateur);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userRepository.save(user);
     }
 
     public UserEntity addUser(UserEntity user){
@@ -95,7 +96,7 @@ public class UserService implements UserServiceImpl, UserDetailsService {
         UserEntity utilisateur = userRepository.findByEmail(user.getEmail());
         if(utilisateur ==null) throw  new RuntimeException("Cet utilisateur n'existe pas ");
 
-        Role roole =roleRepository.findByRoleName(role.getRoleName());
+        Role roole =roleRepository.findByRoleName(role.getRoleName().toString());
         if(roole==null) throw  new RuntimeException("Cet Role n'existe pas ");
         utilisateur.setRole(roole);
         userRepository.save(utilisateur);
@@ -106,9 +107,9 @@ public class UserService implements UserServiceImpl, UserDetailsService {
     public void removeRoleToUser(UserEntity user,Role role) {
         UserEntity utilisateur =userRepository.findByEmail(user.getEmail());
         if(utilisateur ==null) throw  new RuntimeException("Cet utilisateur n'existe pas ");
-        Role roole =roleRepository.findByRoleName(role.getRoleName());
-        if(roole==null) throw  new RuntimeException("Cet Role n'existe pas ");
-        roole.setRoleName("");
+        Role roole =roleRepository.findByRoleName(role.getRoleName().toString());
+        if(roole==null) throw  new RuntimeException("Ce Role n'existe pas ");
+        roole.setRoleName(Rolename.vide);
         utilisateur.setRole(roole);
         userRepository.save(utilisateur);
     }
@@ -118,7 +119,7 @@ public class UserService implements UserServiceImpl, UserDetailsService {
         UserEntity user = getUserByEmail(username);
         if(user ==null) throw  new RuntimeException("Cet utilisateur n'existe pas ");
 
-        return new User(user.getEmail(),user.getPassword(), Collections.singleton(new SimpleGrantedAuthority(user.getRole().getRoleName())));
+        return new User(user.getEmail(),user.getPassword(), Collections.singleton(new SimpleGrantedAuthority(user.getRole().getRoleName().toString())));
 
     }
 }

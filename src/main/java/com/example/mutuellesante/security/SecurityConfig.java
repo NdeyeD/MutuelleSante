@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -35,13 +34,24 @@ public class SecurityConfig {
         // http.formLogin();
         http.csrf(csrf -> csrf.disable());
         http.authorizeRequests()
-                .requestMatchers("/webjars/**").permitAll()
+                .requestMatchers("/webjars/**","/static/***").permitAll()
                 .requestMatchers("/home").permitAll()
                 .requestMatchers("/ac/**").hasAuthority("ac")
                 .anyRequest()
                 .authenticated()
                 .and()
-                .formLogin(Customizer.withDefaults())
+                //.formLogin(Customizer.withDefaults())
+
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .permitAll()
+                        .defaultSuccessUrl("/home")
+                        .failureUrl("/login?error=true"))
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout=true")
+                        .permitAll())
+
                 .exceptionHandling(exceptionHandling ->
                         exceptionHandling.accessDeniedPage("/403")
                 );
