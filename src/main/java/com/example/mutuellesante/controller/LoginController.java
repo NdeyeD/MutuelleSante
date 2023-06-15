@@ -6,6 +6,7 @@ import com.example.mutuellesante.security.entity.UserEntity;
 import com.example.mutuellesante.security.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -61,8 +62,8 @@ public class LoginController {
     @GetMapping("/logout")
     public String logout(HttpServletRequest request) {
         // Invalider la session de l'utilisateur connecté
-        request.getSession().invalidate();
-
+        //request.getSession().invalidate();
+        SecurityContextHolder.clearContext();
         // Rediriger vers la page de connexion
         return "redirect:/login?logout=true";
     }
