@@ -28,7 +28,7 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link active" th:href="@{/home(id=${user.user_id})}">home</a></li>
-                <li class="nav-item"><a class="nav-link" href="">Demande de Remboursement</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/remboursement(id=${user.user_id})}">Remboursement</a></li>
                 <li class="nav-item"><a class="nav-link" href="#projects">Liste des Demande</a></li>
 
             </ul>

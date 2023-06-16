@@ -5,26 +5,24 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 @Entity
-@Table(name="medicaments")
-@DiscriminatorValue(value="medicaments")
+@Table(name="soin")
+@DiscriminatorValue(value="soin")
 @Data
-public class Medicaments {
+public class Soin {
 
     @Id
     @GeneratedValue
     @Column(unique = true, nullable = false, updatable = false)
-    protected Integer medicament_id;
+    protected Integer soin_id;
 
     @Column(nullable = false)
-    private String nom_medicament;
+    private String nom_soin;
+
     @Column(nullable = false)
-    private float prix_unitaire;
-    @Column(nullable = false)
-    private int quantite;
+    private float prix_soin;
 
     @ManyToOne
     @JoinColumn(name = "medecin_id")
     private Medecin medecin;
-
 
 }

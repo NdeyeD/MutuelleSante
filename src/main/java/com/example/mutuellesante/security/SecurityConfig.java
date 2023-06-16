@@ -37,7 +37,6 @@ public class SecurityConfig {
         http.csrf(csrf -> csrf.disable());
         http.authorizeRequests()
                 .requestMatchers("/webjars/**", "/static/css/**", "/static/js/**", "/static/assets/img/**").permitAll()
-                .requestMatchers("/home").permitAll()
                 .requestMatchers("/ac/**").hasAuthority("pharmacien")
                 .anyRequest()
                 .authenticated()

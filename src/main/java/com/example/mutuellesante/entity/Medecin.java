@@ -23,4 +23,11 @@ public class Medecin extends UserEntity {
     //One to Many avec Remboursement
     @OneToMany(mappedBy = "medecin")
     private List<Remboursement> remboursements;
+
+    //One to Many avec medicament
+    @OneToMany(mappedBy = "medecin")
+    private List<Medicaments> medicaments;
+
+    @OneToMany(mappedBy = "medecin")
+    private List<Soin> soins;
 }

@@ -3,6 +3,7 @@ package com.example.mutuellesante;
 import com.example.mutuellesante.entity.Patient;
 import com.example.mutuellesante.entity.Rolename;
 import com.example.mutuellesante.security.entity.Role;
+import com.example.mutuellesante.security.entity.UserEntity;
 import com.example.mutuellesante.security.repository.RoleRepository;
 import com.example.mutuellesante.security.repository.UserRepository;
 import com.example.mutuellesante.security.service.UserService;
@@ -46,28 +47,27 @@ public class MutuelleSanteApplication implements CommandLineRunner {
     @Transactional
     public void run(String... args) throws Exception {
 
-        /*
 
-        //Creer un patient
-        Patient patient =  new Patient();
-        patient.setUsername("Patient 1");
-        patient.setNom("Thiam");
-        patient.setPrenom("El Hadji Daouda");
-        patient.setEmail("patient1@gmail.com");
-        patient.setPassword("passer123");
-        patient.setNumero_carte(12345678L);
+
+        //Creer un Admin
+        UserEntity user =  new UserEntity();
+        user.setUsername("Admin 1");
+        user.setNom("Thiam");
+        user.setPrenom("El Hadji Daouda");
+        user.setEmail("admin1@gmail.com");
+        user.setPassword("passer123");
 
             //Creer le role et affecter
         Role rolepatient = new Role();
-        rolepatient.setRoleName(Rolename.patient);
+        rolepatient.setRoleName(Rolename.admin);
 
         userService.saveRole(rolepatient);
 
-        patient.setRole(rolepatient);
+        user.setRole(rolepatient);
 
-        userService.saveUser(patient);
+        userService.saveUser(user);
 
-        */
+
 
 
     }
