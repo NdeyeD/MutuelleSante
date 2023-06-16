@@ -13,7 +13,7 @@ public class SecurityController {
 
     @GetMapping("/")
     public String index(@AuthenticationPrincipal UserDetails userDetails){
-        return "redirect:/home";
+        return "redirect:/connexion";
     }
 
     @GetMapping("/403")

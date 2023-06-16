@@ -1,16 +1,21 @@
 package com.example.mutuellesante.controller;
 
 
-import ch.qos.logback.core.model.Model;
+import org.springframework.ui.Model;
 import com.example.mutuellesante.security.entity.UserEntity;
 import com.example.mutuellesante.security.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
@@ -21,52 +26,67 @@ public class LoginController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @GetMapping("/login")
+    @GetMapping("/connexion")
     public String login() {
         return "login";
     }
-    @PostMapping("/login")
-    public String processLogin(HttpServletRequest request) {
-        // Récupérer les paramètres du formulaire de connexion
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
+
+    @PostMapping("/connexion")
+    public String processLogin(
+            Model model,
+            @RequestParam("username") String username,
+            @RequestParam("password") String password
+    ) {
+
 
         // Vérifier les informations d'identification de l'utilisateur
-        RedirectAttributes redirectAttributes =  new RedirectAttributesModelMap();
         UserEntity user = userService.getUserByEmail(username);
 
+        // Si les informations d'identification sont valides, créer un cookie de session
+        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
 
-        // Si les informations d'identification sont valides, rediriger vers la page de tableau de bord
-        if (user != null) {
+            int id = user.getUser_id();
+            model.addAttribute("id",id);
+            System.out.println(id);
 
-            // Vérifier si le mot de passe correspond
-            if (passwordEncoder.matches(password, user.getPassword())) {
-                // Mot de passe correct, rediriger vers la page de tableau de bord
-                return "redirect:/home";
-            }
-            redirectAttributes.addFlashAttribute("error", "Mot de passe incorrects");
+            return "redirect:/home?id="+id;
         }
 
-        redirectAttributes.addFlashAttribute("error", "Identifiants incorrects");
-
-
         // Si les informations d'identification sont invalides, rediriger vers la page de connexion avec un message d'erreur
-        return "redirect:/login?error=true";
+        return "redirect:/connexion?error=true";
     }
 
     @GetMapping("/home")
-    public String afficherPageHome(Model model){
+    public String afficherPageHome(
+            Model model,
+            @RequestParam("id") int id
+            ) {
+        UserEntity userEntity = userService.findUserById(id);
+        model.addAttribute("user",userEntity);
         return "home";
     }
 
-    @GetMapping("/logout")
-    public String logout(HttpServletRequest request) {
-        // Invalider la session de l'utilisateur connecté
-        //request.getSession().invalidate();
-        SecurityContextHolder.clearContext();
+    @GetMapping("/deconnexion")
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        // Supprimer le cookie de session en invalidant la session
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+
+            // Supprimer le cookie de session en le rendant invalide
+            Cookie[] cookies = request.getCookies();
+            if (cookies != null) {
+                for (Cookie cookie : cookies) {
+                    if (cookie.getName().equals("JSESSIONID")) {
+                        cookie.setMaxAge(0);
+                        response.addCookie(cookie);
+                        break;
+                    }
+                }
+            }
+        }
+
         // Rediriger vers la page de connexion
-        return "redirect:/login?logout=true";
+        return "redirect:/connexion?logout=true";
     }
-
-
 }

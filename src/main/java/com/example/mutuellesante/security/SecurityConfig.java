@@ -36,20 +36,20 @@ public class SecurityConfig {
         http.authorizeRequests()
                 .requestMatchers("/webjars/**","/static/***").permitAll()
                 .requestMatchers("/home").permitAll()
-                .requestMatchers("/ac/**").hasAuthority("ac")
+                .requestMatchers("/ac/**").hasAuthority("pharmacien")
                 .anyRequest()
                 .authenticated()
                 .and()
                 //.formLogin(Customizer.withDefaults())
 
                 .formLogin(form -> form
-                        .loginPage("/login")
+                        .loginPage("/connexion")
                         .permitAll()
                         .defaultSuccessUrl("/home")
-                        .failureUrl("/login?error=true"))
+                        .failureUrl("/connexion?error=true"))
                 .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout=true")
+                        .logoutUrl("/deconnexion")
+                        .logoutSuccessUrl("/connexion")
                         .permitAll())
 
                 .exceptionHandling(exceptionHandling ->
