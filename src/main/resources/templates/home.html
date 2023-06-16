@@ -28,10 +28,15 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link active" th:href="@{/home(id=${user.user_id})}">home</a></li>
-                <li class="nav-item"><a class="nav-link" href="">Remboursement</a></li>
+                <li class="nav-item"><a class="nav-link" href="">Demande de Remboursement</a></li>
                 <li class="nav-item"><a class="nav-link" href="#projects">Liste des Demande</a></li>
-                <li class="nav-item"><a class="nav-link" th:href="@{/deconnexion}">Deconnexion</a></li>
+
             </ul>
+        </div>
+        <div  class="collapse navbar-collapse">
+            <form th:action="@{/deconnexion}" >
+                <button class="btn btn-outline-danger btn-sm" >Deconnexion</button>
+            </form>
         </div>
     </div>
 </nav>

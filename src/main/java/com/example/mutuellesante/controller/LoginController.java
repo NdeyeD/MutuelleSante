@@ -34,39 +34,43 @@ public class LoginController {
     @PostMapping("/connexion")
     public String processLogin(
             Model model,
+            RedirectAttributes redirectAttributes,
             @RequestParam("username") String username,
             @RequestParam("password") String password
     ) {
-
-
         // Vérifier les informations d'identification de l'utilisateur
         UserEntity user = userService.getUserByEmail(username);
 
-        // Si les informations d'identification sont valides, créer un cookie de session
+        // Si les informations d'identification sont valides, rediriger vers la page d'accueil avec l'ID en tant que paramètre
         if (user != null && passwordEncoder.matches(password, user.getPassword())) {
-
             int id = user.getUser_id();
-            model.addAttribute("id",id);
-            System.out.println(id);
-
-            return "redirect:/home?id="+id;
+            redirectAttributes.addFlashAttribute("id", id);
+            return "redirect:/home";
         }
 
         // Si les informations d'identification sont invalides, rediriger vers la page de connexion avec un message d'erreur
         return "redirect:/connexion?error=true";
     }
 
+
     @GetMapping("/home")
-    public String afficherPageHome(
-            Model model,
-            @RequestParam("id") int id
-            ) {
-        UserEntity userEntity = userService.findUserById(id);
-        model.addAttribute("user",userEntity);
+    public String afficherPageHome(Model model, @RequestParam("id") Integer id) {
+
+        if (id != null) {
+            UserEntity userEntity = userService.findUserById(id.intValue());//
+            model.addAttribute("user", userEntity);
+        } else {
+            // Gérer le cas où la clé "id" est absente ou a une valeur nulle
+            // Par exemple, rediriger vers une page d'erreur ou afficher un message d'erreur
+            return "errors/404";
+        }
         return "home";
     }
 
-    @GetMapping("/deconnexion")
+
+
+
+    @PostMapping("/deconnexion")
     public String logout(HttpServletRequest request, HttpServletResponse response) {
         // Supprimer le cookie de session en invalidant la session
         HttpSession session = request.getSession(false);
@@ -85,8 +89,9 @@ public class LoginController {
                 }
             }
         }
-
-        // Rediriger vers la page de connexion
+        response.setStatus(HttpServletResponse.SC_FOUND);
+        response.setHeader("Location", "/connexion?logout=true");
+        response.setHeader("Connection", "close");
         return "redirect:/connexion?logout=true";
     }
 }
