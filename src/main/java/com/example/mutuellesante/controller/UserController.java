@@ -1,48 +1,74 @@
 package com.example.mutuellesante.controller;
 
+import com.example.mutuellesante.entity.Rolename;
+import com.example.mutuellesante.security.entity.Role;
 import com.example.mutuellesante.security.entity.UserEntity;
+import com.example.mutuellesante.security.repository.RoleRepository;
 import com.example.mutuellesante.security.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
-@RestController
-@RequestMapping("/apiMutuelle/user")
-@RequiredArgsConstructor
+@Controller
 public class UserController {
 
-    private final UserService userService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private RoleRepository roleRepository;
 
-    @GetMapping("/")
-    public ResponseEntity<List<UserEntity>> getAllUsers() {
-        List<UserEntity> users = userService.getAllUser();
-        return ResponseEntity.ok(users);
+    @GetMapping("/utilisateurs")
+    public String afficherUtilisateur(
+            Model model,
+            @RequestParam("id") Integer id
+    ){
+        UserEntity user = userService.findUserById(id);
+        if(user.getRole().getRoleName()== Rolename.admin){
+
+            UserEntity userEntity = userService.findUserById(id.intValue());//
+            model.addAttribute("user", userEntity);
+
+            List<Role> roles = roleRepository.findAll() ;
+            model.addAttribute("listeroles",roles);
+            return "utilisateurs";
+        }
+        return "redirect:/home?id="+id;
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<UserEntity> getUserById(@PathVariable("id") Integer userId) {
-        UserEntity user = userService.findUserById(userId);
-        return ResponseEntity.ok(user);
-    }
+    @PostMapping("/utilisateurs")
+    public String ajouterUtilisateur(
+            Model model,
+            @RequestParam("nom") String nom,
+            @RequestParam("prenom") String prenom,
+            @RequestParam("email") String email,
+            @RequestParam("username") String username,
+            @RequestParam("password") String password,
+            @RequestParam("role_id") Integer role_id,
+            @RequestParam("id") Integer id
+    ){
+        UserEntity user = new UserEntity();
+        user.setNom(nom);
+        user.setPrenom(prenom);
+        user.setPassword(password);
+        user.setUsername(username);
+        user.setEmail(email);
 
-    @PostMapping("/add")
-    public ResponseEntity<UserEntity> addUser(@RequestBody UserEntity user) {
-        UserEntity addedUser = userService.addUser(user);
-        return ResponseEntity.ok(addedUser);
-    }
+        Optional<Role> role = roleRepository.findById(role_id);
 
-    @PutMapping("/{id}")
-    public ResponseEntity<UserEntity> updateUser(@PathVariable("id") Integer userId, @RequestBody UserEntity updatedUser) {
-        updatedUser.setUser_id(userId);
-        updatedUser = userService.updateUser(updatedUser);
-        return ResponseEntity.ok(updatedUser);
-    }
+        if(role!=null){
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable("id") Integer userId) {
-        userService.deleteUser(userId);
-        return ResponseEntity.noContent().build();
+            Role role1 = role.get();
+            user.setRole(role1);
+            userService.saveUser(user);
+
+            return "redirect:/utilisateurs?id="+id;
+        }
+        return "redirect:/home?id="+id;
     }
 }

@@ -47,7 +47,7 @@ public class MutuelleSanteApplication implements CommandLineRunner {
     @Transactional
     public void run(String... args) throws Exception {
 
-
+/*
 
         //Creer un Admin
         UserEntity user =  new UserEntity();
@@ -67,7 +67,7 @@ public class MutuelleSanteApplication implements CommandLineRunner {
 
         userService.saveUser(user);
 
-
+*/
 
 
     }
