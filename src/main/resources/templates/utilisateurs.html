@@ -30,7 +30,7 @@
         <li class="nav-item"><a class="nav-link " th:href="@{/home(id=${user.user_id})}">home</a></li>
         <li class="nav-item"><a class="nav-link" th:href="@{/remboursement(id=${user.user_id})}">Remboursement</a></li>
         <li class="nav-item"><a class="nav-link" href="#projects">Demandes</a></li>
-        <li class="nav-item"><a class="nav-link" href="#projects">Mutuelle</a></li>
+        <li class="nav-item"><a class="nav-link" th:href="@{/mutuelle(id=${user.user_id})}">Mutuelle</a></li>
         <li class="nav-item"><a class="nav-link active" th:href="@{/utilisateurs(id=${user.user_id})}">Utilisateurs</a></li>
 
 
@@ -83,12 +83,14 @@
           <div class="mb-3">
             <input type="password" th:name="password" class="form-control" placeholder="Password" required />
           </div>
+
           <div class="mb-3">
             <input type="hidden" th:name="id" th:value="${user.user_id}" >
             <select th:name="role_id" class="form-select" >
-                <option  th:each="va:${listeroles}" th:value="${va.id}" th:text="${va.roleName}" ></option>
+                <option  th:each="va:${listeroles}" th:value="${va.id}" th:text="${va.roleName}" selected></option>
             </select>
           </div>
+
           <div class="d-grid">
             <button type="submit" class="btn btn-primary">Enregistrer</button>
           </div>

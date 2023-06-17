@@ -34,8 +34,9 @@ public class UserController {
             UserEntity userEntity = userService.findUserById(id.intValue());//
             model.addAttribute("user", userEntity);
 
-            List<Role> roles = roleRepository.findAll() ;
+            Role roles = roleRepository.findByRoleName(Rolename.admin) ;
             model.addAttribute("listeroles",roles);
+
             return "utilisateurs";
         }
         return "redirect:/home?id="+id;

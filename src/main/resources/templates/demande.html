@@ -30,7 +30,7 @@
                 <li class="nav-item"><a class="nav-link " th:href="@{/home(id=${user.user_id})}">home</a></li>
                 <li class="nav-item"><a class="nav-link " th:href="@{/remboursement(id=${user.user_id})}">Remboursement</a></li>
                 <li class="nav-item"><a class="nav-link active " href="#projects">Demandes</a></li>
-                <li class="nav-item"><a class="nav-link" href="#projects">Mutuelle</a></li>
+                <li class="nav-item"><a class="nav-link" th:href="@{/mutuelle(id=${user.user_id})}">Mutuelle</a></li>
                 <li class="nav-item"><a class="nav-link" th:href="@{/utilisateurs(id=${user.user_id})}">Utilisateurs</a></li>
 
             </ul>

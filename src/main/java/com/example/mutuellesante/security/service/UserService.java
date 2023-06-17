@@ -88,7 +88,7 @@ public class UserService implements UserServiceImpl, UserDetailsService {
         return roleRepository.save(role);
     }
     @Override
-    public Role getRoleByRolename(String role) {
+    public Role getRoleByRolename(Rolename role) {
         return roleRepository.findByRoleName(role);
     }
     @Override
@@ -96,7 +96,7 @@ public class UserService implements UserServiceImpl, UserDetailsService {
         UserEntity utilisateur = userRepository.findByEmail(user.getEmail());
         if(utilisateur ==null) throw  new RuntimeException("Cet utilisateur n'existe pas ");
 
-        Role roole =roleRepository.findByRoleName(role.getRoleName().toString());
+        Role roole =roleRepository.findByRoleName(role.getRoleName());
         if(roole==null) throw  new RuntimeException("Cet Role n'existe pas ");
         utilisateur.setRole(roole);
         userRepository.save(utilisateur);
@@ -107,7 +107,7 @@ public class UserService implements UserServiceImpl, UserDetailsService {
     public void removeRoleToUser(UserEntity user,Role role) {
         UserEntity utilisateur =userRepository.findByEmail(user.getEmail());
         if(utilisateur ==null) throw  new RuntimeException("Cet utilisateur n'existe pas ");
-        Role roole =roleRepository.findByRoleName(role.getRoleName().toString());
+        Role roole =roleRepository.findByRoleName(role.getRoleName());
         if(roole==null) throw  new RuntimeException("Ce Role n'existe pas ");
         roole.setRoleName(Rolename.vide);
         utilisateur.setRole(roole);
